@@ -1,0 +1,82 @@
+{
+  "name": "@fransvilhelm/lambi",
+  "version": "0.0.0",
+  "description": "Run scripts in a lambda like env",
+  "main": "index.js",
+  "author": "Adam Bergman <adam@fransvilhelm.com>",
+  "repository": "https://github.com/adambrgmn/lambi.git",
+  "license": "MIT",
+  "bin": "./lambi.js",
+  "scripts": {
+    "dev": "parcel watch src/index.ts --target node",
+    "build": "parcel build src/index.ts --target node",
+    "test": "jest",
+    "semantic-release": "semantic-release",
+    "lambi": "node dist/index.js"
+  },
+  "dependencies": {
+    "execa": "^1.0.0",
+    "listr": "^0.14.3",
+    "read-pkg-up": "^6.0.0",
+    "which": "^1.3.1"
+  },
+  "devDependencies": {
+    "@types/execa": "^0.9.0",
+    "@types/jest": "^24.0.13",
+    "@types/listr": "^0.14.0",
+    "@types/node": "^12.0.7",
+    "@types/read-pkg-up": "^3.0.1",
+    "@types/which": "^1.3.1",
+    "@typescript-eslint/eslint-plugin": "1.x",
+    "@typescript-eslint/parser": "1.x",
+    "babel-eslint": "10.x",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "5.x",
+    "eslint-config-react-app": "4.0.0",
+    "eslint-plugin-flowtype": "2.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "1.5.0",
+    "husky": "^2.4.0",
+    "jest": "^24.8.0",
+    "jest-dom": "^3.5.0",
+    "lint-staged": "^8.2.0",
+    "parcel-bundler": "^1.12.3",
+    "prettier": "^1.18.2",
+    "react-testing-library": "^8.0.1",
+    "semantic-release": "^15.13.12",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "concurrent": false,
+    "linters": {
+      "*.{js,ts,jsx,tsx,json,md,yml,html}": [
+        "prettier --write",
+        "git add"
+      ]
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "proseWrap": "always"
+  }
+}
