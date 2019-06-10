@@ -6,7 +6,11 @@
   "author": "Adam Bergman <adam@fransvilhelm.com>",
   "repository": "https://github.com/adambrgmn/lambi.git",
   "license": "MIT",
-  "bin": "./lambi.js",
+  "bin": "./dist/lambi.js",
+  "files": [
+    "dist",
+    "dockerfiles"
+  ],
   "scripts": {
     "dev": "parcel watch src/index.ts --target node",
     "build": "parcel build src/index.ts --target node",
