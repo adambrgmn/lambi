@@ -16,6 +16,11 @@ enum PackageManager {
   npm = 'npm',
 }
 
+interface Config {
+  env: string[];
+  envFile?: string;
+}
+
 interface ListrContext {
   command: string;
   cwd: string;
@@ -24,14 +29,23 @@ interface ListrContext {
   imageName: string;
 }
 
-export async function run(command: string) {
+export async function run(command: string, config: Config) {
   const ctx: ListrContext = await prepare(command);
 
   log.info('\nPreparations completed');
   log.info('Now running task in lambda like context\n');
+
   return execa(
     'docker',
-    ['run', ctx.imageName, '/bin/bash', '-c', ctx.command],
+    [
+      'run',
+      ...(config.envFile ? ['--env-file', config.envFile] : []),
+      ...config.env.flatMap(e => ['--env', e]),
+      ctx.imageName,
+      '/bin/bash',
+      '-c',
+      ctx.command,
+    ],
     { cwd: ctx.cwd, stdio: 'inherit' },
   );
 }
