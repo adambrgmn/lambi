@@ -9,8 +9,9 @@ const cli = meow(
     $ lambi <command>
 
   Options
-    --env, -e  Provide environment variable
-    --env-file Define a file of environment variables
+    --env, -e    Provide environment variables
+    --env-file   Define a file of environment variables
+    --volume, -v Relative path to folders to mount into container
 
   Examples
     $ lambi --env STAGE=development "env"
@@ -24,6 +25,10 @@ const cli = meow(
       envFile: {
         type: 'string',
       },
+      volume: {
+        type: 'string',
+        alias: 'v',
+      },
     },
   },
 );
@@ -33,6 +38,7 @@ const config = {
   envFile: cli.flags.envFile
     ? path.resolve(process.cwd(), cli.flags.envFile)
     : undefined,
+  volume: arrayify(cli.flags.volume),
 };
 
 const command = cli.input.join(' ');

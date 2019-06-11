@@ -5,6 +5,7 @@ import execa from 'execa';
 import Listr, { ListrOptions } from 'listr';
 import readPkgUp from 'read-pkg-up';
 import whichCb from 'which';
+import { flatMap } from 'lodash';
 import { TestRenderer } from './TestRenderer';
 import * as log from './log';
 
@@ -17,8 +18,9 @@ enum PackageManager {
 }
 
 interface Config {
-  env: string[];
   envFile?: string;
+  env: string[];
+  volume: string[];
 }
 
 interface ListrContext {
@@ -30,27 +32,35 @@ interface ListrContext {
 }
 
 export async function run(command: string, config: Config) {
-  const ctx: ListrContext = await prepare(command);
+  const ctx: ListrContext = await prepare();
 
   log.info('\nPreparations completed');
   log.info('Now running task in lambda like context\n');
+
+  const envFile = config.envFile ? ['--env-file', config.envFile] : [];
+  const env = flatMap(config.env, e => ['--env', e]);
+  const volume = flatMap(config.volume, v => [
+    '--volume',
+    `${path.join(ctx.cwd, v)}:${path.join('/var/task', v)}`,
+  ]);
 
   return execa(
     'docker',
     [
       'run',
-      ...(config.envFile ? ['--env-file', config.envFile] : []),
-      ...config.env.flatMap(e => ['--env', e]),
+      ...env,
+      ...envFile,
+      ...volume,
       ctx.imageName,
       '/bin/bash',
       '-c',
-      ctx.command,
+      command,
     ],
     { cwd: ctx.cwd, stdio: 'inherit' },
   );
 }
 
-function prepare(command: string) {
+function prepare() {
   const options: ListrOptions = {};
 
   if (process.env.NODE_ENV === 'test') {
@@ -101,7 +111,7 @@ function prepare(command: string) {
     options,
   );
 
-  return tasks.run({ command });
+  return tasks.run();
 }
 
 async function getPackageManager(pkgRoot: string): Promise<PackageManager> {

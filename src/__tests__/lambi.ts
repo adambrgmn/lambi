@@ -10,7 +10,7 @@ jest.mock('which');
 jest.mock('execa');
 jest.mock('read-pkg-up');
 
-const defaultConfig = { env: [] };
+const defaultConfig = { env: [], volume: [] };
 
 afterEach(() => {
   // @ts-ignore
@@ -80,7 +80,7 @@ it('should run the command with docker run', async () => {
 });
 
 it('should supply provided env variables to docker env', async () => {
-  await run('ls -al', { env: ['NODE_ENV=test'] });
+  await run('ls -al', { env: ['NODE_ENV=test'], volume: [] });
   expect(execa).toHaveBeenLastCalledWith(
     'docker',
     [
@@ -100,13 +100,33 @@ it('should supply provided env variables to docker env', async () => {
 });
 
 it('should supply provided env file to docker env', async () => {
-  await run('ls -al', { env: [], envFile: '.env' });
+  await run('ls -al', { env: [], envFile: '.env', volume: [] });
   expect(execa).toHaveBeenLastCalledWith(
     'docker',
     [
       'run',
       '--env-file',
       '.env',
+      'lambi-fransvilhelm-lambi',
+      '/bin/bash',
+      '-c',
+      'ls -al',
+    ],
+    expect.objectContaining({
+      cwd: expect.any(String),
+      stdio: 'inherit',
+    }),
+  );
+});
+
+it('should apply provided volumes to docker run command', async () => {
+  await run('ls -al', { env: [], volume: ['dist'] });
+  expect(execa).toHaveBeenLastCalledWith(
+    'docker',
+    [
+      'run',
+      '--volume',
+      `${join(process.cwd(), 'dist')}:/var/task/dist`,
       'lambi-fransvilhelm-lambi',
       '/bin/bash',
       '-c',
