@@ -2,6 +2,9 @@
 
 > Run commands in a docker like node environment
 
+![npm (scoped)](https://img.shields.io/npm/v/@fransvilhelm/lambi)
+![Travis (.org)](https://img.shields.io/travis/adambrgmn/lambi)
+
 ## Description
 
 `lambi` is mainly a cli util used to run commands in a
