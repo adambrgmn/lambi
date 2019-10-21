@@ -2,7 +2,7 @@
 # The Docker env is used in order to mimic the AWS Lambda execution environment
 # as closely as possible
 
-FROM lambci/lambda:build-nodejs8.10
+FROM lambci/lambda:build-nodejs10.x
 ENV PATH "${PATH}:./node_modules/.bin"
 
 # We copy package.json and yarn.lock before any other files in order to leverage
